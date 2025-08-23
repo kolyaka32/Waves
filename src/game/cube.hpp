@@ -10,13 +10,9 @@
 
 class Cube {
 private:
-    float height;
-    float posX, posY;
+
 
 public:
-    void init(int X, int Y);
-    void setH(float t, int x, int y);
-    float getX();
-    float getY();
-    const static int side = 64;
+    float height = 0;
+    const static int side = 32;
 };

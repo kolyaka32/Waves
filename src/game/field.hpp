@@ -13,13 +13,19 @@ class Field {
 private:
     const int width, height;
     const CubeTexture texture;
-    Cube* field;
-    float t;
+    Cube* field1;
+    Cube* field2;
+    float t = 0.0;
+    bool clicking = false;
 
 public:
     Field(const Window& window, int width, int height);
     ~Field();
-    void click(const Mouse mouse);
+    SDL_Point getRelativePos();
+    bool isValid(SDL_Point point);
+    void click();
+    void unclick();
+    void swap();
     void update();
     void blit() const;
 };

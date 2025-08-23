@@ -13,7 +13,7 @@ Libraries libraries;
 // Main function
 int main(int argv, char **args) {
     // Creating main window
-    Window window{800, 500, {"Something", "Штука"}};
+    Window window{1000, 800, {"Something", "Штука"}};
 
     // Running menu
     CycleTemplate::runCycle<BaseCycle>(window);

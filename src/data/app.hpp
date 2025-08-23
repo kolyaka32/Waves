@@ -6,9 +6,6 @@
 #pragma once
 
 #include "libraries.hpp"
-#include "initFile.hpp"
-#include "preloaded/sounds.hpp"
-#include "preloaded/music.hpp"
 #include "window.hpp"
 
 

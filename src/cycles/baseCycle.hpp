@@ -8,14 +8,13 @@
 
 #include "../data/cycleTemplate.hpp"
 #include "../GUI/interface.hpp"
-#include "../game/settingsMenu.hpp"
+#include "../game/field.hpp"
 
 
 // Base cycle for use in any game mode
 class BaseCycle : public CycleTemplate {
  protected:
-    SettingsMenu settings;     // Menu for change settings
-    const GUI::ImageButton exitButton;  // Button for exit from mode
+    Field field;
 
  public:
     BaseCycle(Window& _window);
@@ -23,4 +22,5 @@ class BaseCycle : public CycleTemplate {
     void update() override;
     void inputMouseUp() override;
     void inputMouseWheel(float _wheelY) override;
+    void draw() const override;
 };

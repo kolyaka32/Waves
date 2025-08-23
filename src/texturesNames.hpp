@@ -8,32 +8,6 @@
 
 // Names of all images with related numbers
 enum class Textures : unsigned {
-    // Base part
-    // Graphic interface sprites
-    PauseButton,
-    SliderButton,
-    SliderLine,
-    QuitButton,
-    RestartButton,
-    // Base flags in settings
-    FlagUSA,
-    FlagRUS,
-    FlagGER,
-    FlagBEL,
-
-    // Main game part
-    // Green (current player) figures
-    GreenCross,
-    RedCross,
-    // Red (opponent player) figures
-    GreenCircle,
-    RedCircle,
-    // Empty cell
-    Cell,
-
-    // Additional part
-    Screamer,
-
     // Global counter of all textures
     Count,
 };

@@ -5,53 +5,21 @@
 
 #pragma once
 
-#include "../data/app.hpp"
+#include "cube.hpp"
+#include "cubeTexture.hpp"
 
 
-// Types of cells on field
-enum class Cell : Uint8 {
-    Empty,
-    Current,
-    Opponent,
-};
-
-// Types of game state
-enum class GameState : Uint8 {
-    None,
-    CurrentPlay,
-    OpponentPlay,
-    CurrentWin,
-    OpponentWin,
-    NobodyWin,
-};
-
-// Class with game field
 class Field {
- private:
-    Cell data[81];      // Grid of cells, representing game field
-    int count;          // Counter of filled cells
+private:
+    const int width, height;
+    const CubeTexture texture;
+    Cube* field;
+    float t;
 
- protected:
-    void checkSound();  // Function of playing sound after game end
-    void AImove();      // Move of computer
-    int recursivelySolve(Uint8 round);  // Function for solve game in singleplayer recursively
-    GameState checkWin(int X, int Y);  // Check, if anyone win after his turn, return who win
-
- public:
-    // Sizes of field
-    int width;     // Size of field
-    int winWidth;  // Length of line to win
-    // Current state of the game
-    GameState gameState;
-
-    //
-    Field();
-    void reset();
-    Cell getCell(int x, int y) const;
-
-    // Turns of sides
-    bool clickSingle(int x, int y);  // Clicking in singleplayer mode
-    bool clickTwo(int x, int y);     // Clicking in two-player mode
-    bool clickMultiplayerCurrent(int x, int y);   // Clicking in multiplayer mode, return if have turn
-    void clickMultiplayerOpponent(int x, int y);  // Clicking in multiplayer mode by internet connection
+public:
+    Field(const Window& window, int width, int height);
+    ~Field();
+    void click(const Mouse mouse);
+    void update();
+    void blit() const;
 };

@@ -1,0 +1,11 @@
+/*
+ * Copyright (C) 2024-2025, Kazankov Nikolay
+ * <nik.kazankov.05@mail.ru>
+ */
+
+#include "dataLoader.hpp"
+
+
+SDL_IOStream* DataLoader::load(const char* name) const {
+    return nullptr;
+}

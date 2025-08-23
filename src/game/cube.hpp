@@ -5,14 +5,18 @@
 
 #pragma once
 
+#include "../data/app.hpp"
+
 
 class Cube {
 private:
     float height;
+    float posX, posY;
 
 public:
-    void init();
+    void init(int X, int Y);
     void setH(float t, int x, int y);
-    float getX(int x);
-    float getY(int y);
+    float getX();
+    float getY();
+    const static int side = 32;
 };

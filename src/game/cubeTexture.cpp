@@ -9,48 +9,44 @@
 CubeTexture::CubeTexture(const Window& _window)
 : window(_window) {
     // Create texture
-    const int sideLength = 16;
-    texture = window.createTexture(sideLength*2, sideLength*2);
+    texture = window.createTexture(Cube::side, Cube::side);
     window.setRenderTarget(texture);
-
-    //window.setDrawColor(WHITE);
-    //window.clear();
 
     // Upper part
     window.setDrawColor({88, 133, 186, 255});
-    for (int i=0; i < sideLength/2; ++i) {
-        window.drawLine(sideLength-i*2, i, sideLength+i*2, i);
+    for (int i=0; i < Cube::side/4; ++i) {
+        window.drawLine(Cube::side/2-i*2, i, Cube::side/2+i*2, i);
     }
-    for (int i=0; i < sideLength/2; ++i) {
-        window.drawLine(2*i, i+sideLength/2, 2*sideLength-i*2, i+sideLength/2);
+    for (int i=0; i < Cube::side/4; ++i) {
+        window.drawLine(2*i, i+Cube::side/4, Cube::side-i*2, i+Cube::side/4);
     }
 
     // Left part
     window.setDrawColor({65, 90, 140, 255});
-    for (int i=0; i < sideLength; ++i) {
-        window.drawLine(0, i+sideLength/2, sideLength, i+sideLength);
+    for (int i=0; i < Cube::side/2; ++i) {
+        window.drawLine(0, i+Cube::side/4, Cube::side/2, i+Cube::side/2);
     }
-    
+
     // Right part
-    window.setDrawColor({100, 135, 150, 255});
-    for (int i=0; i < sideLength; ++i) {
-        window.drawLine(sideLength*2, i+sideLength/2, sideLength, i+sideLength);
+    window.setDrawColor({160, 217, 247, 255});
+    for (int i=0; i < Cube::side/2; ++i) {
+        window.drawLine(Cube::side, i+Cube::side/4, Cube::side/2, i+Cube::side/2);
     }
 
     // Internal frame
     window.setDrawColor(WHITE);
-    window.drawLine(0, sideLength/2, sideLength, sideLength);
-    window.drawLine(sideLength*2, sideLength/2, sideLength, sideLength);
-    window.drawLine(sideLength, sideLength, sideLength, sideLength*2);
+    window.drawLine(0,             Cube::side/4, Cube::side/2, Cube::side/2);
+    window.drawLine(Cube::side,    Cube::side/4, Cube::side/2, Cube::side/2);
+    window.drawLine(Cube::side/2,  Cube::side/2, Cube::side/2, Cube::side);
 
     // External frame
     window.setDrawColor(BLACK);
-    window.drawLine(0,              sideLength/2,     sideLength,     0);
-    window.drawLine(sideLength*2,   sideLength/2,     sideLength,     0);
-    window.drawLine(0,              sideLength/2,     0,              sideLength*3/2-1);
-    window.drawLine(sideLength*2-1, sideLength/2,     sideLength*2-1, sideLength*3/2-1);
-    window.drawLine(0,              sideLength*3/2-1, sideLength,     sideLength*2-1);
-    window.drawLine(sideLength*2-1, sideLength*3/2-1, sideLength,     sideLength*2-1);
+    window.drawLine(0,            Cube::side/4,     Cube::side/2, 0);
+    window.drawLine(Cube::side,   Cube::side/4,     Cube::side/2, 0);
+    window.drawLine(0,            Cube::side/4,     0,            Cube::side*3/4-1);
+    window.drawLine(Cube::side-1, Cube::side/4,     Cube::side-1, Cube::side*3/4-1);
+    window.drawLine(0,            Cube::side*3/4-1, Cube::side/2, Cube::side-1);
+    window.drawLine(Cube::side-1, Cube::side*3/4-1, Cube::side/2, Cube::side-1);
 
     // End
     window.resetRenderTarget();

@@ -11,13 +11,17 @@ Field::Field(const Window& _window, int _width, int _height)
 height(_height),
 texture(_window) {
     field = new Cube[width*height];
-    for (int i=0; i < width*height; ++i) {
-        field[i].init();
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            field[y*width+x].init(x, y);
+        }
     }
     t = 0.0;
 }
 
-Field::~Field() {}
+Field::~Field() {
+    delete[] field;
+}
 
 void Field::click(const Mouse mouse) {
     
@@ -29,12 +33,13 @@ void Field::update() {
             field[y*width+x].setH(t, x, y);
         }
     }
+    t += 0.1;
 }
 
 void Field::blit() const {
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            texture.blit(field[y*width+x].getX(x), field[y*width+x].getY(y));
+            texture.blit(field[y*width+x].getX(), field[y*width+x].getY());
         }
     }
 }

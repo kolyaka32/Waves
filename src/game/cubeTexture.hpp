@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "../data/app.hpp"
+#include "cube.hpp"
 
 
 class CubeTexture {

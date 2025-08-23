@@ -17,8 +17,7 @@ class LanguagedText {
     const std::string textVariants[(unsigned)Language::Count];
 
  public:
-    LanguagedText(const std::string englishVariant, const std::string russianVariant,
-        const std::string germanVariant, const std::string bellarussianVariant);
+    LanguagedText(const std::string englishVariant, const std::string russianVariant);
     const std::string& getString() const;
     // Options for change current language
     static bool setLanguage(Language newLanguage);

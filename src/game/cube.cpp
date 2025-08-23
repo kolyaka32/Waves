@@ -7,19 +7,17 @@
 #include <SDL3/SDL.h>
 
 void Cube::init(int x, int y) {
-    /*if (y % 2 == 0) {
-        posX = x*side/2;
+    if (y % 2 == 0) {
+        posX = x*side - side/2;
     } else {
-        posX = x*side/2 + side/4;
+        posX = x*side;
     }
-    posY = y*side + x*side/2;
-    height = 0;*/
-    posX = 0;
-    posY = 0;
+    posY = y*side/4-side/2;
+    height = 0;
 }
 
 void Cube::setH(float t, int x, int y) {
-    //height = SDL_sinf(posX + posY) * 1.0f;
+    height = SDL_sinf((x + y)*0.1 + t) * 16.0f;
 }
 
 float Cube::getX() {

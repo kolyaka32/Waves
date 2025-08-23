@@ -17,6 +17,7 @@ texture(_window) {
         }
     }
     t = 0.0;
+    logAdditional("Field: %dx%d", width, height);
 }
 
 Field::~Field() {
@@ -33,7 +34,7 @@ void Field::update() {
             field[y*width+x].setH(t, x, y);
         }
     }
-    t += 0.1;
+    t += 0.05;
 }
 
 void Field::blit() const {

@@ -18,5 +18,5 @@ public:
     void setH(float t, int x, int y);
     float getX();
     float getY();
-    const static int side = 32;
+    const static int side = 64;
 };

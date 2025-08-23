@@ -9,7 +9,7 @@
 // Base cycle class
 BaseCycle::BaseCycle(Window& _window)
 : CycleTemplate(_window),
-field(window, 20, 20) {}
+field(window, SDL_ceilf(float(window.getWidth())/Cube::side), SDL_ceilf(float(window.getHeight())/Cube::side*4+2)) {}
 
 bool BaseCycle::inputMouseDown() {
     /*if (settings.click(mouse)) {

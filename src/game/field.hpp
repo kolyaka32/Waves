@@ -11,6 +11,7 @@
 
 class Field {
 private:
+    const Window& window;
     const int width, height;
     const CubeTexture texture;
     Cube* field;

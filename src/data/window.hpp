@@ -66,8 +66,19 @@ class Window {
     void unlock(SDL_Texture* texture) const;
     void destroy(SDL_Texture* texture) const;
 
+    // Text
+    template <typename ...Args>
+    void drawText(float X, float Y, const char* text, const Args& ...args) const;
+
     // Work with window
     void startTextInput() const;
     void stopTextInput() const;
     void updateTitle() const;
 };
+
+
+// Temlates realisation
+template <typename ...Args>
+void Window::drawText(float _X, float _Y, const char* _text, const Args& ..._args) const {
+    SDL_RenderDebugTextFormat(renderer, _X, _Y, _text, _args...);
+}

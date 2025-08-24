@@ -7,7 +7,8 @@
 
 
 Field::Field(const Window& _window, int _width, int _height)
-: width(_width),
+: window(_window),
+width(_width),
 height(_height),
 texture(_window) {
     field = new Cube[width*height];
@@ -98,4 +99,7 @@ void Field::blit() const {
             texture.blit(X, Y);
         }
     }
+    window.setDrawColor(WHITE);
+    window.drawText(10.0, 10.0, "Size: %f", size);
+    window.drawText(10.0, 25.0, "Reset: \'r\'");
 }

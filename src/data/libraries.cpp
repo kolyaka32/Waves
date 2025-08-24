@@ -11,12 +11,12 @@ Libraries::Libraries() {
     // Load depend on teting
     #if CHECK_CORRECTION
     // Initialasing main library
-    if (!SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO)) {
+    if (!SDL_Init(SDL_INIT_VIDEO)) {
         throw LibararyLoadException("Main library: " + std::string(SDL_GetError()));
     }
     logAdditional("Libraries load correctly");
     #else
-    SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_VIDEO);
     #endif
 }
 

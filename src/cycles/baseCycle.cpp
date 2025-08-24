@@ -9,7 +9,7 @@
 // Base cycle class
 BaseCycle::BaseCycle(Window& _window)
 : CycleTemplate(_window),
-field(window, 50, 50) {}
+field(window, 100, 100) {}
 
 bool BaseCycle::inputMouseDown() {
     /*if (settings.click(mouse)) {
@@ -24,11 +24,22 @@ void BaseCycle::update() {
 }
 
 void BaseCycle::inputMouseUp() {
-    field.unclick();
+    
 }
 
 void BaseCycle::inputMouseWheel(float _wheelY) {
+    field.wheelScroll(_wheelY);
+}
+
+void BaseCycle::inputKeys(SDL_Keycode key) {
+    switch (key) {
+    case SDLK_R:
+        field.reset();
+        break;
     
+    default:
+        break;
+    }
 }
 
 void BaseCycle::draw() const {

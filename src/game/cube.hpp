@@ -11,8 +11,8 @@
 class Cube {
 private:
 
-
 public:
-    float height = 0;
+    float x = 0;
+    float vx = 0;
     const static int side = 32;
 };

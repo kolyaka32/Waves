@@ -13,9 +13,9 @@ class Field {
 private:
     const int width, height;
     const CubeTexture texture;
-    Cube* field1;
-    Cube* field2;
-    float t = 0.0;
+    Cube* field;
+    float* temp;
+    float size = 20.0;
     bool clicking = false;
 
 public:
@@ -24,8 +24,8 @@ public:
     SDL_Point getRelativePos();
     bool isValid(SDL_Point point);
     void click();
-    void unclick();
-    void swap();
+    void wheelScroll(float wheel);
+    void reset();
     void update();
     void blit() const;
 };

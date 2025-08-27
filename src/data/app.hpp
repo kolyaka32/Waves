@@ -5,8 +5,11 @@
 
 #pragma once
 
-#include "libraries.hpp"
+#include "preloaded/sounds.hpp"
+#include "preloaded/music.hpp"
 #include "window.hpp"
+#include "mouse.hpp"
+#include "macroses.hpp"
 
 
 // Class of whole current application

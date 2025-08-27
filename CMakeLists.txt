@@ -21,7 +21,6 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Look for a SDL3 package
 find_package(SDL3 REQUIRED)
-#find_package(SDL3_image REQUIRED)
 
 # Link to the actual SDL3 library.
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3-static)

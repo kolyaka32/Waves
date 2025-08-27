@@ -100,6 +100,6 @@ void Field::blit() const {
         }
     }
     window.setDrawColor(WHITE);
-    window.drawText(10.0, 10.0, "Size: %f", size);
-    window.drawText(10.0, 25.0, "Reset: \'r\'");
+    window.drawDebugText(10.0, 10.0, "Size: %f", size);
+    window.drawDebugText(10.0, 25.0, "Reset: \'r\'");
 }

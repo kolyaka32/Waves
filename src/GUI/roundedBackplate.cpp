@@ -33,7 +33,7 @@ GUI::RoundedBackplate::RoundedBackplate(const Window& _window, const SDL_FRect& 
     window.setDrawColor(_backColor);
     for (float y=0; y <= _rad+_bor; ++y) {
         for (float x=0; x < _rad+_bor; ++x) {
-            if (y*y + x*x >= (_rad-_bor)*(_rad-_bor)) {
+            if (sqr(y) + sqr(x) >= sqr(_rad-_bor)) {
                 window.drawPoint(_rad-x, _rad-y);
                 window.drawPoint(rect.w-_rad+x, _rad-y);
                 window.drawPoint(_rad-x, rect.h-_rad+y);
@@ -46,7 +46,7 @@ GUI::RoundedBackplate::RoundedBackplate(const Window& _window, const SDL_FRect& 
     window.setDrawColor({255, 255, 255, 0});
     for (float y=0; y <= _rad; ++y) {
         for (float x=0; x <= _rad; ++x) {
-            if (y*y + x*x > _rad*_rad) {
+            if (sqr(y) + sqr(x) > sqr(_rad)) {
                 window.drawPoint(_rad-x, _rad-y);
                 window.drawPoint(rect.w-_rad+x, _rad-y);
                 window.drawPoint(_rad-x, rect.h-_rad+y);

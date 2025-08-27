@@ -5,20 +5,33 @@
 
 #pragma once
 
-#include <SDL3/SDL.h>
 #include "colors.hpp"
-#include "mouse.hpp"
 #include "time.hpp"
+#include "preloaded/textures.hpp"
+#include "preloaded/animations.hpp"
+#include "preloaded/fonts.hpp"
 #include "languages.hpp"
 
 
-// Class of window, where all happen
+// Class of window, drawn functions, work with it
 class Window {
  private:
     int width, height;
     const LanguagedText titleText;
     SDL_Window* window;
     SDL_Renderer* renderer;
+    #if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+    // Preloaded textures
+    const TexturesData textures;
+    #endif
+    #if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
+    // Preloaded animations
+    const AnimationsData animations;
+    #endif
+    #if (USE_SDL_FONT) && (PRELOAD_FONTS)
+    // Preloaded fonts
+    const FontsData fonts;
+    #endif
 
     // Set new title
     void updateTitle(const char* name) const;
@@ -56,7 +69,7 @@ class Window {
     SDL_Texture* createTexture(SDL_Surface* surface) const;
     SDL_Texture* createTextureAndFree(SDL_Surface* surface) const;
     void blit(SDL_Texture* texture, const SDL_FRect& dest) const;
-    void blit(SDL_Texture* texture, const SDL_FRect* dest, const SDL_FRect* src) const;
+    void blit(SDL_Texture* texture, const SDL_FRect* dest = nullptr, const SDL_FRect* src = nullptr) const;
     void blit(SDL_Texture* texture, float angle, const SDL_FRect& rect, const SDL_FRect* src = nullptr,
         SDL_FPoint center = {0, 0}) const;
     void setRenderTarget(SDL_Texture* target) const;
@@ -66,9 +79,27 @@ class Window {
     void unlock(SDL_Texture* texture) const;
     void destroy(SDL_Texture* texture) const;
 
-    // Text
+    // Work with preloaded textures
+    #if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+    SDL_Texture* getTexture(Textures name) const;
+    #endif
+
+    // Work with preloaded animations
+    #if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
+    IMG_Animation* getAnimation(Animations name) const;
+    #endif
+
+    // Work with preloaded fonts and text
+    #if (USE_SDL_FONT) && (PRELOAD_FONTS)
+    TTF_Font* getFont(Fonts name) const;
+    TTF_Font* createFontCopy(Fonts name, float height) const;
+    SDL_Texture* createTexture(Fonts font, float height, const char* text, unsigned length, Color color) const;
+    SDL_Texture* createTexture(TTF_Font* font, const char* text, Color color) const;
+    #endif
+
+    // Draw raw text without TTF library
     template <typename ...Args>
-    void drawText(float X, float Y, const char* text, const Args& ...args) const;
+    void drawDebugText(float X, float Y, const char* text, const Args& ...args) const;
 
     // Work with window
     void startTextInput() const;
@@ -79,6 +110,6 @@ class Window {
 
 // Temlates realisation
 template <typename ...Args>
-void Window::drawText(float _X, float _Y, const char* _text, const Args& ..._args) const {
+void Window::drawDebugText(float _X, float _Y, const char* _text, const Args& ..._args) const {
     SDL_RenderDebugTextFormat(renderer, _X, _Y, _text, _args...);
 }

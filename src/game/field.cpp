@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2025-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -55,9 +55,15 @@ void Field::wheelScroll(float wheel) {
         for (;wheel < 0; ++wheel) {
             size /= 1.2;
         }
+        if (size < 0.1) {
+            size = 0.1;
+        }
     } else {
         for (;wheel > 0; --wheel) {
             size *= 1.2;
+        }
+        if (size > 500) {
+            size = 500;
         }
     }
 }
@@ -71,7 +77,7 @@ void Field::update() {
                 0.8f*((field[(y-1)*width+x-1].x +
                 field[(y-1)*width+x].x +
                 field[(y-1)*width+x+1].x +
-                field[y*width+x-1].x + 
+                field[y*width+x-1].x +
                 field[y*width+x+1].x +
                 field[(y+1)*width+x-1].x +
                 field[(y+1)*width+x].x +

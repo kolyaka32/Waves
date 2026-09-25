@@ -90,11 +90,10 @@ void Field::update() {
         field[i].x = temp[i];
     }
 
-    /*
     // Smoothing function
     for (int i=0; i < width*height; ++i) {
-        field1[i].height *= 0.8f;
-    }*/
+        field[i].vx *= 0.99f;
+    }
 }
 
 void Field::blit() const {

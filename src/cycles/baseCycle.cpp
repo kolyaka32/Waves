@@ -31,15 +31,8 @@ void BaseCycle::inputMouseWheel(float _wheelY) {
     field.wheelScroll(_wheelY);
 }
 
-void BaseCycle::inputKeys(SDL_Keycode key) {
-    switch (key) {
-    case SDLK_R:
-        field.reset();
-        break;
-    
-    default:
-        break;
-    }
+void BaseCycle::inputKeys(SDL_Keycode _key) {
+    field.press(_key);
 }
 
 void BaseCycle::draw() const {

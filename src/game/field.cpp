@@ -25,12 +25,16 @@ void Field::reset() {
     for (int i = 0; i < width*height; ++i) {
         field[i].x = 0.0f;
         field[i].vx = 0.0f;
+        field[i].mass = 1.0f;
         temp[i] = 0.0f;
     }
+    type = Push;
+    pushForce = 20.0;
 }
 
 bool Field::isValid(SDL_Point point) {
-    return (point.x > 0 && point.y > 0 && point.x < width-1 && point.y < height-1);
+    return (point.x > 0 && point.x < width-1 &&
+        point.y > 0 && point.y < height-1);
 }
 
 SDL_Point Field::getRelative(const Mouse _mouse) const {
@@ -48,7 +52,66 @@ void Field::click() {
     mouse.updatePos();
     SDL_Point p = getRelative(mouse);
     if (isValid(p)) {
-        field[p.x+p.y*width].x += pushForce;
+        switch (type) {
+        case Push:
+            // Pushing
+            field[p.x+p.y*width].x += pushForce;
+            break;
+
+        case Normal:
+            // Placing wall
+            field[p.x+p.y*width].mass = 1.0;
+            break;
+
+        case Heavy:
+            // Placing heavy cell
+            field[p.x+p.y*width].mass = 2.0;
+            break;
+
+        case Wall:
+            // Placing wall
+            field[p.x+p.y*width].mass = 90000.0;
+            break;
+
+        case Source:
+            // Placing sources
+            // !
+            break;
+
+        default:
+            break;
+        }
+    }
+}
+
+void Field::press(SDL_Keycode _key) {
+    switch (_key) {
+    case SDLK_1:
+        type = Push;
+        break;
+
+    case SDLK_2:
+        type = Normal;
+        break;
+
+    case SDLK_3:
+        type = Heavy;
+        break;
+
+    case SDLK_4:
+        type = Wall;
+        break;
+
+    case SDLK_5:
+        type = Source;
+        break;
+        
+    case SDLK_R:
+        reset();
+        break;
+
+    default:
+        break;
     }
 }
 
@@ -108,6 +171,33 @@ void Field::blit() const {
         }
     }
     window.setDrawColor(WHITE);
-    window.drawDebugText(10.0, 10.0, "Force: %f", pushForce);
-    window.drawDebugText(10.0, 25.0, "Reset: \'r\'");
+    window.drawDebugText(10.0, 10.0, "Reset: \'r\'");
+    switch (type) {
+    case None:
+        window.drawDebugText(10.0, 25.0, "None");
+        break;
+
+    case Push:
+        window.drawDebugText(10.0, 25.0, "Push, force: %.1f", pushForce);
+        break;
+
+    case Normal:
+        window.drawDebugText(10.0, 25.0, "Place wall");
+        break;
+
+    case Heavy:
+        window.drawDebugText(10.0, 25.0, "Place heavy");
+        break;
+
+    case Wall:
+        window.drawDebugText(10.0, 25.0, "Place wall");
+        break;
+
+    case Source:
+        window.drawDebugText(10.0, 25.0, "Place source");
+        break;
+
+    default:
+        break;
+    }
 }

@@ -9,6 +9,18 @@
 #include "cubeTexture.hpp"
 
 
+// Possible types of interaction
+enum Type {
+    None,
+    // Straight interact
+    Push,
+    // Placement
+    Normal,
+    Heavy,
+    Wall,
+    Source,
+};
+
 class Field {
 private:
     // Field
@@ -21,7 +33,8 @@ private:
 
     // Interaction
     bool clicking = false;
-    float pushForce = 20.0;
+    int type;  // Type of interaction
+    float pushForce;
 
     // Graphic part
     const CubeTexture texture;
@@ -42,6 +55,7 @@ public:
 
     // Interaction
     void click();
+    void press(SDL_Keycode key);
     void wheelScroll(float wheel);
     void update();
     void blit() const;

@@ -8,17 +8,10 @@
 #include "../data/app.hpp"
 
 
-// Possible types of cube
-enum Type {
-    None,
-    Wall,
-    Source,
-};
-
 // Single object parameters
 class Cube {
 public:
     float x = 0;
     float vx = 0;
-    int type = None;
+    float mass = 1.0;
 };

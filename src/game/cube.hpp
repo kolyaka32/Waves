@@ -33,10 +33,8 @@ class Cube {
 public:
     float x = 0;
     float vx = 0;
-    float mass = 1.0;
+    float inertion = 1.0;  // 1/mass
     int type = Normal;
-
-    float temp;
 
     void reset();
     void setType(Click type);

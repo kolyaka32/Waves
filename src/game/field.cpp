@@ -11,8 +11,8 @@ Field::Field(const Window& _window, int _width, int _height)
 width(_width),
 height(_height),
 normalTexture(_window, {88, 133, 186, 255}, {65, 90, 140, 255}, {160, 217, 247, 255}),
-heavyTexture(_window, {0x1f, 0xab, 0x89, 255}, {0x62, 0xd2, 0xa2, 255}, {0x9d, 0xd3, 0xc3, 255}),
-wallTexture(_window, {120, 120, 120, 255}, {90, 90, 90, 255}, {190, 190, 190, 255}) {
+heavyTexture(_window, {0x62, 0xd2, 0xa2, 255}, {0x1f, 0xab, 0x89, 255}, {0x9d, 0xd3, 0xc3, 255}),
+wallTexture(_window, {90, 90, 90, 255}, {120, 120, 120, 255}, {190, 190, 190, 255}) {
     field = new Cube[width*height];
     reset();
 }
@@ -52,7 +52,6 @@ void Field::click() {
     if (isValid(p)) {
         switch (type) {
         case Click::Push:
-            // Pushing
             field[p.x+p.y*width].x += pushForce;
             break;
 
@@ -126,16 +125,10 @@ void Field::wheelScroll(float wheel) {
     }
 }
 
-float Field::getDelta(int x, int y) {
-    return (field[(y-1)*width+x-1].x +
-        field[(y-1)*width+x].x +
-        field[(y-1)*width+x+1].x +
-        field[y*width+x-1].x +
-        field[y*width+x+1].x +
-        field[(y+1)*width+x-1].x +
-        field[(y+1)*width+x].x +
-        field[(y+1)*width+x+1].x)/8 -
-        field[y*width+x].x;
+void Field::interact(Cube& _cube1, Cube& _cube2) const {
+    float force = springKoef * (_cube1.x - _cube2.x) / 4;
+    _cube1.vx -= force*_cube1.inertion;
+    _cube2.vx += force*_cube2.inertion;
 }
 
 void Field::update() {
@@ -144,25 +137,29 @@ void Field::update() {
         Mouse mouse;
         mouse.updatePos();
         SDL_Point p = getRelative(mouse);
-        field[p.x+p.y*width].setType(type);
+        if (isValid(p)) {
+            field[p.x+p.y*width].setType(type);
+        }
     }
 
     // Physics
-    for (int y = 1; y < height-1; ++y) {
-        for (int x = 1; x < width-1; ++x) {
-            // Update speed as spring
-            field[y*width+x].vx += springKoef*getDelta(x, y);
-            // Get new position
-            field[y*width+x].temp = field[y*width+x].x + field[y*width+x].vx;
+    // Vertical interactions
+    for (int y = 0; y < height-1; ++y) {
+        for (int x = 0; x < width; ++x) {
+            interact(field[y*width+x], field[(y+1)*width+x]);
         }
     }
-    // Set new position
-    for (int i=0; i < width*height; ++i) {
-        field[i].x = field[i].temp;
+    // Horizontal interactions
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width-1; ++x) {
+            interact(field[y*width+x], field[y*width+x+1]);
+        }
     }
-    // Friction
     for (int i=0; i < width*height; ++i) {
+        // Friction
         field[i].vx *= friction;
+        // Set new position
+        field[i].x += field[i].vx;
     }
 }
 

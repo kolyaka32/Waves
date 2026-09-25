@@ -14,7 +14,7 @@ private:
     const int width, height;
     Cube* field;
     // Physics constants
-    const float springKoef = 0.8;
+    const float springKoef = 1.0;
     const float friction = 0.99;
 
     // Interaction
@@ -28,13 +28,12 @@ private:
     const CubeTexture wallTexture;
     const Window& window;
 
-    // Return delta between point and neighbours
-    float getDelta(int x, int y);
-
     //
     bool isValid(SDL_Point point);
     SDL_Point getRelative(const Mouse mouse) const;
     SDL_FPoint getAbsolute(int x, int y, float h) const;
+
+    void interact(Cube& cube1, Cube& cube2) const;
 
 public:
     Field(const Window& window, int width, int height);

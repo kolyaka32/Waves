@@ -16,7 +16,7 @@ private:
 public:
     static const float side;
 
-    CubeTexture(const Window& window);
+    CubeTexture(const Window& window, Color upper, Color left, Color right);
     ~CubeTexture();
     void blit(const SDL_FPoint p) const;
 };

@@ -8,10 +8,36 @@
 #include "../data/app.hpp"
 
 
+// Posiible type of cell
+enum Type {
+    Normal,
+    Heavy,
+    Wall,
+    Source,
+};
+
+// Possible types of interaction
+enum class Click {
+    None,
+    // Straight interact
+    Push,
+    // Placement
+    Normal,
+    Heavy,
+    Wall,
+    Source,
+};
+
 // Single object parameters
 class Cube {
 public:
     float x = 0;
     float vx = 0;
     float mass = 1.0;
+    int type = Normal;
+
+    float temp;
+
+    void reset();
+    void setType(Click type);
 };

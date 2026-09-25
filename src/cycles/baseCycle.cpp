@@ -24,7 +24,7 @@ void BaseCycle::update() {
 }
 
 void BaseCycle::inputMouseUp() {
-    
+    field.unclick();
 }
 
 void BaseCycle::inputMouseWheel(float _wheelY) {

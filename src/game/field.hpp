@@ -5,39 +5,27 @@
 
 #pragma once
 
-#include "cube.hpp"
 #include "cubeTexture.hpp"
 
-
-// Possible types of interaction
-enum Type {
-    None,
-    // Straight interact
-    Push,
-    // Placement
-    Normal,
-    Heavy,
-    Wall,
-    Source,
-};
 
 class Field {
 private:
     // Field
     const int width, height;
     Cube* field;
-    float* temp;
     // Physics constants
     const float springKoef = 0.8;
     const float friction = 0.99;
 
     // Interaction
     bool clicking = false;
-    int type;  // Type of interaction
+    Click type;  // Type of interaction
     float pushForce;
 
     // Graphic part
-    const CubeTexture texture;
+    const CubeTexture normalTexture;
+    const CubeTexture heavyTexture;
+    const CubeTexture wallTexture;
     const Window& window;
 
     // Return delta between point and neighbours
@@ -55,6 +43,7 @@ public:
 
     // Interaction
     void click();
+    void unclick();
     void press(SDL_Keycode key);
     void wheelScroll(float wheel);
     void update();

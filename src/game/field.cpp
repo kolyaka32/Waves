@@ -10,26 +10,24 @@ Field::Field(const Window& _window, int _width, int _height)
 : window(_window),
 width(_width),
 height(_height),
-texture(_window) {
+normalTexture(_window, {88, 133, 186, 255}, {65, 90, 140, 255}, {160, 217, 247, 255}),
+heavyTexture(_window, {0x1f, 0xab, 0x89, 255}, {0x62, 0xd2, 0xa2, 255}, {0x9d, 0xd3, 0xc3, 255}),
+wallTexture(_window, {120, 120, 120, 255}, {90, 90, 90, 255}, {190, 190, 190, 255}) {
     field = new Cube[width*height];
-    temp = new float[width*height];
     reset();
 }
 
 Field::~Field() {
     delete[] field;
-    delete[] temp;
 }
 
 void Field::reset() {
     for (int i = 0; i < width*height; ++i) {
-        field[i].x = 0.0f;
-        field[i].vx = 0.0f;
-        field[i].mass = 1.0f;
-        temp[i] = 0.0f;
+        field[i].reset();
     }
-    type = Push;
+    type = Click::Push;
     pushForce = 20.0;
+    clicking = false;
 }
 
 bool Field::isValid(SDL_Point point) {
@@ -53,29 +51,16 @@ void Field::click() {
     SDL_Point p = getRelative(mouse);
     if (isValid(p)) {
         switch (type) {
-        case Push:
+        case Click::Push:
             // Pushing
             field[p.x+p.y*width].x += pushForce;
             break;
 
-        case Normal:
-            // Placing wall
-            field[p.x+p.y*width].mass = 1.0;
-            break;
-
-        case Heavy:
-            // Placing heavy cell
-            field[p.x+p.y*width].mass = 2.0;
-            break;
-
-        case Wall:
-            // Placing wall
-            field[p.x+p.y*width].mass = 90000.0;
-            break;
-
-        case Source:
-            // Placing sources
-            // !
+        case Click::Normal:
+        case Click::Heavy:
+        case Click::Wall:
+        case Click::Source:
+            clicking = true;
             break;
 
         default:
@@ -84,28 +69,36 @@ void Field::click() {
     }
 }
 
+void Field::unclick() {
+    clicking = false;
+}
+
 void Field::press(SDL_Keycode _key) {
     switch (_key) {
     case SDLK_1:
-        type = Push;
+        type = Click::Push;
         break;
 
     case SDLK_2:
-        type = Normal;
+        type = Click::Normal;
         break;
 
     case SDLK_3:
-        type = Heavy;
+        type = Click::Heavy;
         break;
 
     case SDLK_4:
-        type = Wall;
+        type = Click::Wall;
         break;
 
     case SDLK_5:
-        type = Source;
+        type = Click::Source;
         break;
-        
+
+    case SDLK_0:
+        type = Click::None;
+        break;
+
     case SDLK_R:
         reset();
         break;
@@ -146,17 +139,26 @@ float Field::getDelta(int x, int y) {
 }
 
 void Field::update() {
+    // Interaction
+    if (clicking) {
+        Mouse mouse;
+        mouse.updatePos();
+        SDL_Point p = getRelative(mouse);
+        field[p.x+p.y*width].setType(type);
+    }
+
+    // Physics
     for (int y = 1; y < height-1; ++y) {
         for (int x = 1; x < width-1; ++x) {
             // Update speed as spring
             field[y*width+x].vx += springKoef*getDelta(x, y);
             // Get new position
-            temp[y*width+x] = field[y*width+x].x + field[y*width+x].vx;
+            field[y*width+x].temp = field[y*width+x].x + field[y*width+x].vx;
         }
     }
     // Set new position
     for (int i=0; i < width*height; ++i) {
-        field[i].x = temp[i];
+        field[i].x = field[i].temp;
     }
     // Friction
     for (int i=0; i < width*height; ++i) {
@@ -167,33 +169,54 @@ void Field::update() {
 void Field::blit() const {
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            texture.blit(getAbsolute(x, y, field[y*width+x].x));
+            SDL_FPoint p = getAbsolute(x, y, field[y*width+x].x);
+            switch (field[y*width+x].type) {
+            case Normal:
+                normalTexture.blit(p);
+                break;
+
+            case Heavy:
+                heavyTexture.blit(p);
+                break;
+
+            case Wall:
+                wallTexture.blit(p);
+                break;
+
+            case Source:
+                heavyTexture.blit(p);
+                break;
+
+            default:
+                break;
+            }
+            
         }
     }
     window.setDrawColor(WHITE);
     window.drawDebugText(10.0, 10.0, "Reset: \'r\'");
     switch (type) {
-    case None:
+    case Click::None:
         window.drawDebugText(10.0, 25.0, "None");
         break;
 
-    case Push:
+    case Click::Push:
         window.drawDebugText(10.0, 25.0, "Push, force: %.1f", pushForce);
         break;
 
-    case Normal:
+    case Click::Normal:
         window.drawDebugText(10.0, 25.0, "Place wall");
         break;
 
-    case Heavy:
+    case Click::Heavy:
         window.drawDebugText(10.0, 25.0, "Place heavy");
         break;
 
-    case Wall:
+    case Click::Wall:
         window.drawDebugText(10.0, 25.0, "Place wall");
         break;
 
-    case Source:
+    case Click::Source:
         window.drawDebugText(10.0, 25.0, "Place source");
         break;
 

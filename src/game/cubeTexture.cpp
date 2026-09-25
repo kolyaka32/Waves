@@ -8,14 +8,14 @@
 
 const float CubeTexture::side = 32.0;
 
-CubeTexture::CubeTexture(const Window& _window)
+CubeTexture::CubeTexture(const Window& _window, Color _upper, Color _left, Color _right)
 : window(_window) {
     // Create texture
     texture = window.createTexture(side, side);
     window.setRenderTarget(texture);
 
     // Upper part
-    window.setDrawColor({88, 133, 186, 255});
+    window.setDrawColor(_upper);
     for (int i=0; i < side/4; ++i) {
         window.drawLine(side/2-i*2, i, side/2+i*2, i);
     }
@@ -24,13 +24,13 @@ CubeTexture::CubeTexture(const Window& _window)
     }
 
     // Left part
-    window.setDrawColor({65, 90, 140, 255});
+    window.setDrawColor(_left);
     for (int i=0; i < side/2; ++i) {
         window.drawLine(0, i+side/4, side/2, i+side/2);
     }
 
     // Right part
-    window.setDrawColor({160, 217, 247, 255});
+    window.setDrawColor(_right);
     for (int i=0; i < side/2; ++i) {
         window.drawLine(side, i+side/4, side/2, i+side/2);
     }

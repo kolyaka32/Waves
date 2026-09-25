@@ -14,7 +14,9 @@ private:
     SDL_Texture* texture;
 
 public:
+    static const float side;
+
     CubeTexture(const Window& window);
     ~CubeTexture();
-    void blit(float x, float y) const;
+    void blit(const SDL_FPoint p) const;
 };

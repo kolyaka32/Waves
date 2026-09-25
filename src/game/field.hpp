@@ -11,22 +11,38 @@
 
 class Field {
 private:
-    const Window& window;
+    // Field
     const int width, height;
-    const CubeTexture texture;
     Cube* field;
     float* temp;
-    float size = 20.0;
+    // Physics constants
+    const float springKoef = 0.8;
+    const float friction = 0.99;
+
+    // Interaction
     bool clicking = false;
+    float pushForce = 20.0;
+
+    // Graphic part
+    const CubeTexture texture;
+    const Window& window;
+
+    // Return delta between point and neighbours
+    float getDelta(int x, int y);
+
+    //
+    bool isValid(SDL_Point point);
+    SDL_Point getRelative(const Mouse mouse) const;
+    SDL_FPoint getAbsolute(int x, int y, float h) const;
 
 public:
     Field(const Window& window, int width, int height);
     ~Field();
-    SDL_Point getRelativePos();
-    bool isValid(SDL_Point point);
+    void reset();
+
+    // Interaction
     void click();
     void wheelScroll(float wheel);
-    void reset();
     void update();
     void blit() const;
 };

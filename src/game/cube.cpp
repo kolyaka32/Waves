@@ -22,7 +22,7 @@ void Cube::setType(Click _type) {
 
     case Click::Heavy:
         type = Heavy;
-        inertion = 0.5;
+        inertion = 0.1;
         break;
 
     case Click::Wall:

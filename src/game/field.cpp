@@ -36,8 +36,8 @@ bool Field::isValid(SDL_Point point) {
 }
 
 SDL_Point Field::getRelative(const Mouse _mouse) const {
-    return {int((_mouse.getX() + 2*_mouse.getY()-500) / CubeTexture::side) + height/4,
-        int((2*_mouse.getY() - _mouse.getX()+500) / CubeTexture::side) + height/4};
+    return {int((_mouse.getX() + 2*_mouse.getY()-500-CubeTexture::side/2) / CubeTexture::side) + height/4,
+        int((2*_mouse.getY() - _mouse.getX()+500-CubeTexture::side/2) / CubeTexture::side) + height/4};
 }
 
 SDL_FPoint Field::getAbsolute(int x, int y, float h) const {
@@ -191,7 +191,7 @@ void Field::blit() const {
         }
     }
     window.setDrawColor(WHITE);
-    window.drawDebugText(10.0, 10.0, "Reset: \'r\'");
+    window.drawDebugText(10.0, 10.0, "Interactions: \'1-5\', Reset: \'r\'");
     switch (type) {
     case Click::None:
         window.drawDebugText(10.0, 25.0, "None");
@@ -202,7 +202,7 @@ void Field::blit() const {
         break;
 
     case Click::Normal:
-        window.drawDebugText(10.0, 25.0, "Place wall");
+        window.drawDebugText(10.0, 25.0, "Place normal");
         break;
 
     case Click::Heavy:

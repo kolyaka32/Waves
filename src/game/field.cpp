@@ -11,6 +11,7 @@ Field::Field(const Window& _window, int _width, int _height)
 width(_width),
 height(_height),
 normalTexture(_window, {88, 133, 186, 255}, {65, 90, 140, 255}, {160, 217, 247, 255}),
+lightTexture(_window, {255, 255, 0, 255}, {255, 223, 0, 255}, {255, 237, 0, 255}),
 heavyTexture(_window, {0x62, 0xd2, 0xa2, 255}, {0x1f, 0xab, 0x89, 255}, {0x9d, 0xd3, 0xc3, 255}),
 wallTexture(_window, {90, 90, 90, 255}, {120, 120, 120, 255}, {190, 190, 190, 255}) {
     field = new Cube[width*height];
@@ -56,6 +57,7 @@ void Field::click() {
             break;
 
         case Click::Normal:
+        case Click::Light:
         case Click::Heavy:
         case Click::Wall:
         case Click::Source:
@@ -83,14 +85,18 @@ void Field::press(SDL_Keycode _key) {
         break;
 
     case SDLK_3:
-        type = Click::Heavy;
+        type = Click::Light;
         break;
 
     case SDLK_4:
-        type = Click::Wall;
+        type = Click::Heavy;
         break;
 
     case SDLK_5:
+        type = Click::Wall;
+        break;
+
+    case SDLK_6:
         type = Click::Source;
         break;
 
@@ -172,6 +178,10 @@ void Field::blit() const {
                 normalTexture.blit(p);
                 break;
 
+            case Light:
+                lightTexture.blit(p);
+                break;
+
             case Heavy:
                 heavyTexture.blit(p);
                 break;
@@ -187,7 +197,6 @@ void Field::blit() const {
             default:
                 break;
             }
-            
         }
     }
     window.setDrawColor(WHITE);
@@ -203,6 +212,10 @@ void Field::blit() const {
 
     case Click::Normal:
         window.drawDebugText(10.0, 25.0, "Place normal");
+        break;
+
+    case Click::Light:
+        window.drawDebugText(10.0, 25.0, "Place light");
         break;
 
     case Click::Heavy:

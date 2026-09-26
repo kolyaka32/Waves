@@ -20,6 +20,11 @@ void Cube::setType(Click _type) {
         inertion = 1.0;
         break;
 
+    case Click::Light:
+        type = Light;
+        inertion = 2.0;
+        break;
+
     case Click::Heavy:
         type = Heavy;
         inertion = 0.1;

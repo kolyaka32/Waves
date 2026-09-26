@@ -24,6 +24,7 @@ private:
 
     // Graphic part
     const CubeTexture normalTexture;
+    const CubeTexture lightTexture;
     const CubeTexture heavyTexture;
     const CubeTexture wallTexture;
     const Window& window;

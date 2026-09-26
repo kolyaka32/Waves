@@ -11,6 +11,7 @@
 // Posiible type of cell
 enum Type {
     Normal,
+    Light,
     Heavy,
     Wall,
     Source,
@@ -23,6 +24,7 @@ enum class Click {
     Push,
     // Placement
     Normal,
+    Light,
     Heavy,
     Wall,
     Source,

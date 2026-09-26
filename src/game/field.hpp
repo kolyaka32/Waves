@@ -42,10 +42,10 @@ public:
     void reset();
 
     // Interaction
-    void click();
+    bool click();
     void unclick();
-    void press(SDL_Keycode key);
-    void wheelScroll(float wheel);
+    bool press(SDL_Keycode key);
+    bool wheelScroll(float wheel);
     void update();
     void blit() const;
 };

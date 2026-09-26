@@ -27,12 +27,12 @@ void BaseCycle::inputMouseUp() {
     field.unclick();
 }
 
-void BaseCycle::inputMouseWheel(float _wheelY) {
-    field.wheelScroll(_wheelY);
+bool BaseCycle::inputMouseWheel(float _wheelY) {
+    return field.wheelScroll(_wheelY);
 }
 
-void BaseCycle::inputKeys(SDL_Keycode _key) {
-    field.press(_key);
+bool BaseCycle::inputKeys(SDL_Keycode _key) {
+    return field.press(_key);
 }
 
 void BaseCycle::draw() const {

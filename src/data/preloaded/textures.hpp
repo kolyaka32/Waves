@@ -1,15 +1,19 @@
 /*
- * Copyright (C) 2025-2026, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
 #pragma once
 
 #include "../../texturesNames.hpp"
-#include <SDL3/SDL_render.h>
 
-// Check, if can load images and preload it
-#if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+#if (PRELOAD_TEXTURES)
+
+#if (USE_SDL_IMAGE)
+#include <SDL3_image/SDL_image.h>
+#else
+#error "Can't preload images without library"
+#endif
 
 
 // Class for load, draw and clear textures
@@ -24,4 +28,4 @@ class TexturesData {
     SDL_Texture* operator[] (Textures name) const;
 };
 
-#endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+#endif  // (PRELOAD_TEXTURES)

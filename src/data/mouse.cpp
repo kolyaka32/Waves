@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025-2026, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -7,12 +7,12 @@
 #include "mouse.hpp"
 
 
-Mouse::Mouse() {
-    position = {0, 0};
-}
+Mouse::Mouse()
+: position({0, 0}),
+state(0) {}
 
 void Mouse::updatePos() {
-    SDL_GetMouseState(&position.x, &position.y);
+    state = SDL_GetMouseState(&position.x, &position.y);
 }
 
 bool Mouse::in(SDL_FRect _rect) const {
@@ -29,4 +29,8 @@ float Mouse::getX() const {
 
 float Mouse::getY() const {
     return position.y;
+}
+
+SDL_MouseButtonFlags Mouse::getState() const {
+    return state;
 }

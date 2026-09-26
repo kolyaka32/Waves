@@ -46,7 +46,7 @@ SDL_FPoint Field::getAbsolute(int x, int y, float h) const {
         CubeTexture::side*(float(x)/4 + float(y)/4 - height/8) - h};
 }
 
-void Field::click() {
+bool Field::click() {
     Mouse mouse;
     mouse.updatePos();
     SDL_Point p = getRelative(mouse);
@@ -67,14 +67,16 @@ void Field::click() {
         default:
             break;
         }
+        return true;
     }
+    return false;
 }
 
 void Field::unclick() {
     clicking = false;
 }
 
-void Field::press(SDL_Keycode _key) {
+bool Field::press(SDL_Keycode _key) {
     switch (_key) {
     case SDLK_1:
         type = Click::Push;
@@ -109,11 +111,12 @@ void Field::press(SDL_Keycode _key) {
         break;
 
     default:
-        break;
+        return false;
     }
+    return true;
 }
 
-void Field::wheelScroll(float wheel) {
+bool Field::wheelScroll(float wheel) {
     if (wheel < 0) {
         for (;wheel < 0; ++wheel) {
             pushForce /= 1.2;
@@ -129,6 +132,7 @@ void Field::wheelScroll(float wheel) {
             pushForce = 500;
         }
     }
+    return true;
 }
 
 void Field::interact(Cube& _cube1, Cube& _cube2) const {

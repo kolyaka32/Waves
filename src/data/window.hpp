@@ -1,10 +1,11 @@
 /*
- * Copyright (C) 2025-2026, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
 #pragma once
 
+#include <SDL3/SDL_render.h>
 #include "colors.hpp"
 #include "time.hpp"
 #include "preloaded/textures.hpp"
@@ -57,6 +58,7 @@ class Window {
     void drawPoint(float x, float y) const;
     void drawRect(const SDL_FRect& rect) const;
     void drawLine(float x1, float y1, float x2, float y2) const;
+    void drawGeometry(const SDL_Vertex* vertices, int numVerticies, SDL_Texture* texture = nullptr) const;
 
     // Work with own surfaces
     SDL_Surface* createSurface(int width, int height, SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA32) const;
@@ -68,10 +70,13 @@ class Window {
         SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA32) const;
     SDL_Texture* createTexture(SDL_Surface* surface) const;
     SDL_Texture* createTextureAndFree(SDL_Surface* surface) const;
+    void copyTexture(SDL_Texture* dest, SDL_Texture* src) const;
     void blit(SDL_Texture* texture, const SDL_FRect& dest) const;
     void blit(SDL_Texture* texture, const SDL_FRect* dest = nullptr, const SDL_FRect* src = nullptr) const;
     void blit(SDL_Texture* texture, float angle, const SDL_FRect& rect, const SDL_FRect* src = nullptr,
-        SDL_FPoint center = {0, 0}) const;
+        SDL_FlipMode flipMode = SDL_FLIP_NONE) const;
+    void blit(SDL_Texture* texture, float angle, const SDL_FRect& rect, SDL_FPoint center,
+        const SDL_FRect* src = nullptr, SDL_FlipMode flipMode = SDL_FLIP_NONE) const;
     void setRenderTarget(SDL_Texture* target) const;
     void resetRenderTarget() const;
     void setBlendMode(SDL_Texture* texture, SDL_BlendMode blendMode = SDL_BLENDMODE_NONE) const;
@@ -104,6 +109,7 @@ class Window {
     // Work with window
     void startTextInput() const;
     void stopTextInput() const;
+    void setTitle(const LanguagedText newTitles) const;
     void updateTitle() const;
 };
 

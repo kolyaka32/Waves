@@ -1,11 +1,10 @@
 /*
- * Copyright (C) 2025-2026, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
 #include "window.hpp"
 #include "../define.hpp"
-#include "exceptions.hpp"
 
 
 Window::Window(int _width, int _height, const LanguagedText _title)
@@ -26,14 +25,14 @@ titleText(_title) {
     // Checking on correction of created objects
     #if (CHECK_CORRECTION)
     if (window == NULL) {
-        throw LibararyLoadException("window creation");
+        logger.important("Can't create window");
     }
     #endif
 
     // Creating renderer from window
     #if (CHECK_CORRECTION)
     if (renderer == NULL) {
-        throw LibararyLoadException("renderer creation");
+        logger.important("Can't create renderer");
     }
     #endif
 }
@@ -93,6 +92,10 @@ void Window::drawLine(float x1, float y1, float x2, float y2) const {
     SDL_RenderLine(renderer, x1, y1, x2, y2);
 }
 
+void Window::drawGeometry(const SDL_Vertex* _vertices, int _numVer, SDL_Texture* _texture) const {
+    SDL_RenderGeometry(renderer, _texture, _vertices, _numVer, nullptr, 0);
+}
+
 
 // Work with surfaces
 SDL_Surface* Window::createSurface(int _width, int _height, SDL_PixelFormat _format) const {
@@ -123,6 +126,12 @@ SDL_Texture* Window::createTextureAndFree(SDL_Surface* _surface) const {
     return texture;
 }
 
+void Window::copyTexture(SDL_Texture* _dest, SDL_Texture* _src) const {
+    setRenderTarget(_dest);
+    SDL_RenderTexture(renderer, _src, nullptr, nullptr);
+    resetRenderTarget();
+}
+
 void Window::blit(SDL_Texture* _texture, const SDL_FRect& _dest) const {
     SDL_RenderTexture(renderer, _texture, nullptr, &_dest);
 }
@@ -132,8 +141,13 @@ void Window::blit(SDL_Texture* _texture, const SDL_FRect* _dest, const SDL_FRect
 }
 
 void Window::blit(SDL_Texture* _texture, float _angle, const SDL_FRect& _dest,
-    const SDL_FRect* _src, SDL_FPoint _center) const {
-    SDL_RenderTextureRotated(renderer, _texture, _src, &_dest, _angle, &_center, SDL_FLIP_NONE);
+    const SDL_FRect* _src, SDL_FlipMode _flipMode) const {
+    SDL_RenderTextureRotated(renderer, _texture, _src, &_dest, _angle, nullptr, _flipMode);
+}
+
+void Window::blit(SDL_Texture* _texture, float _angle, const SDL_FRect& _rect, SDL_FPoint _center,
+    const SDL_FRect* _src, SDL_FlipMode _flipMode) const {
+    SDL_RenderTextureRotated(renderer, _texture, _src, &_rect, _angle, &_center, _flipMode);
 }
 
 void Window::setRenderTarget(SDL_Texture* _target) const {
@@ -224,6 +238,10 @@ void Window::startTextInput() const {
 
 void Window::stopTextInput() const {
     SDL_StopTextInput(window);
+}
+
+void Window::setTitle(const LanguagedText newTitles) const {
+    updateTitle(newTitles.getString().c_str());
 }
 
 void Window::updateTitle(const char* _name) const {

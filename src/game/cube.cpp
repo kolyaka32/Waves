@@ -39,7 +39,7 @@ void Cube::setType(Click _type) {
 
     case Click::Source:
         type = Source;
-        inertion = 1.0;
+        inertion = 0.0;
         break;
     
     default:

@@ -14,6 +14,7 @@ private:
     const int width, height;
     Cube* field;
     // Physics constants
+    float time;
     const float springKoef = 1.0;
     const float friction = 0.95;
     const float minForce = 0.1;
@@ -23,6 +24,8 @@ private:
     SDL_MouseButtonFlags clicking;
     Click type;  // Type of interaction
     float pushForce;
+    const float sourceAmp = 40.0;
+    float sourceFreq = 0.2;
 
     // Graphic part
     const CubeTexture normalTexture;
@@ -35,6 +38,7 @@ private:
     bool isValid(SDL_Point point);
     SDL_Point getRelative(const Mouse mouse) const;
     SDL_FPoint getAbsolute(int x, int y, float h) const;
+    void scroll(float& val, float wheelY) const;
 
     void interact(Cube& cube1, Cube& cube2) const;
 
@@ -47,7 +51,7 @@ public:
     bool click(const Mouse mouse);
     void unclick();
     bool press(SDL_Keycode key);
-    bool wheelScroll(float wheel);
+    bool wheelScroll(float wheelY);
     void update(const Mouse mouse);
     void blit() const;
 };

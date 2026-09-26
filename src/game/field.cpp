@@ -29,6 +29,7 @@ void Field::reset() {
     type = Click::Push;
     pushForce = 20.0;
     clicking = 0;
+    time = 0.0;
 }
 
 bool Field::isValid(SDL_Point point) {
@@ -115,21 +116,32 @@ bool Field::press(SDL_Keycode _key) {
     return true;
 }
 
-bool Field::wheelScroll(float wheel) {
-    if (wheel < 0) {
-        for (;wheel < 0; ++wheel) {
-            pushForce /= 1.2;
+void Field::scroll(float& _val, float _wheelY) const {
+    if (_wheelY < 0) {
+        for (;_wheelY < 0; ++_wheelY) {
+            _val /= 1.2;
         }
-        if (pushForce < minForce) {
-            pushForce = minForce;
-        }
+        setMin(_val, minForce);
     } else {
-        for (;wheel > 0; --wheel) {
-            pushForce *= 1.2;
+        for (;_wheelY > 0; --_wheelY) {
+            _val *= 1.2;
         }
-        if (pushForce > maxForce) {
-            pushForce = maxForce;
-        }
+        setMax(_val, maxForce);
+    }
+}
+
+bool Field::wheelScroll(float _wheelY) {
+    switch (type) {
+    case Click::Push:
+        scroll(pushForce, _wheelY);
+        break;
+
+    case Click::Source:
+        scroll(sourceFreq, _wheelY);
+        break;
+    
+    default:
+        break;
     }
     return true;
 }
@@ -155,6 +167,15 @@ void Field::update(const Mouse _mouse) {
     }
 
     // Physics
+    // Sources
+    float sourcHeight = sourceAmp*SDL_sinf(time);
+    time += sourceFreq;
+    for (int i=0; i < width*height; ++i) {
+        if (field[i].type == Source) {
+            field[i].x = sourcHeight;
+        }
+    }
+
     // Vertical interactions
     for (int y = 0; y < height-1; ++y) {
         for (int x = 0; x < width; ++x) {
@@ -229,7 +250,7 @@ void Field::blit() const {
         break;
 
     case Click::Source:
-        window.drawDebugText(10.0, 25.0, "Place source/normal");
+        window.drawDebugText(10.0, 25.0, "Place source/normal, period: %f", sourceFreq);
         break;
 
     default:

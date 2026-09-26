@@ -16,7 +16,7 @@ private:
     // Physics constants
     float time;
     const float springKoef = 1.0;
-    const float friction = 0.95;
+    const float frictions[8] = {0.1, 0.5, 0.8, 0.9, 0.95, 0.99, 0.999, 1.0};
     const float minForce = 0.1;
     const float maxForce = 1000.0;
 
@@ -24,6 +24,7 @@ private:
     SDL_MouseButtonFlags clicking;
     Click type;  // Type of interaction
     float pushForce;
+    int frictionVar;
     const float sourceAmp = 40.0;
     float sourceFreq = 0.2;
 

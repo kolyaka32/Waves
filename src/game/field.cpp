@@ -27,6 +27,7 @@ void Field::reset() {
         field[i].reset();
     }
     type = Click::Push;
+    frictionVar = sizeof(frictions)/sizeof(*frictions)-1;
     pushForce = 20.0;
     clicking = 0;
     time = 0.0;
@@ -102,6 +103,10 @@ bool Field::press(SDL_Keycode _key) {
         type = Click::Source;
         break;
 
+    case SDLK_6:
+        type = Click::Friction;
+        break;
+
     case SDLK_0:
         type = Click::None;
         break;
@@ -138,6 +143,20 @@ bool Field::wheelScroll(float _wheelY) {
 
     case Click::Source:
         scroll(sourceFreq, _wheelY);
+        break;
+
+    case Click::Friction:
+        if (_wheelY < 0) {
+            for (;_wheelY < 0; ++_wheelY) {
+                frictionVar--;
+            }
+            setMin(frictionVar, 0);
+        } else {
+            for (;_wheelY > 0; --_wheelY) {
+                frictionVar++;
+            }
+            setMax(frictionVar, 7);
+        }
         break;
     
     default:
@@ -190,7 +209,7 @@ void Field::update(const Mouse _mouse) {
     }
     for (int i=0; i < width*height; ++i) {
         // Friction
-        field[i].vx *= friction;
+        field[i].vx *= frictions[frictionVar];
         // Set new position
         field[i].x += field[i].vx;
     }
@@ -227,7 +246,7 @@ void Field::blit() const {
         }
     }
     window.setDrawColor(WHITE);
-    window.drawDebugText(10.0, 10.0, "Interactions: \'1-5,0\', Reset: \'r\'");
+    window.drawDebugText(10.0, 10.0, "Interactions: \'1-6,0\', Reset: \'r\'");
     switch (type) {
     case Click::None:
         window.drawDebugText(10.0, 25.0, "None");
@@ -251,6 +270,10 @@ void Field::blit() const {
 
     case Click::Source:
         window.drawDebugText(10.0, 25.0, "Place source/normal, period: %f", sourceFreq);
+        break;
+
+    case Click::Friction:
+        window.drawDebugText(10.0, 25.0, "Friction: %f", frictions[frictionVar]);
         break;
 
     default:

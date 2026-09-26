@@ -28,6 +28,8 @@ enum class Click {
     Heavy,
     Wall,
     Source,
+    // Additional parameters
+    Friction,
 };
 
 // Single object parameters

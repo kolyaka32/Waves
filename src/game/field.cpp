@@ -26,8 +26,9 @@ void Field::reset() {
     for (int i = 0; i < width*height; ++i) {
         field[i].reset();
     }
+    running = true;
     type = Click::Push;
-    frictionVar = sizeof(frictions)/sizeof(*frictions)-1;
+    frictionVar = 5;  // 0.9 as most stable
     pushForce = 20.0;
     clicking = 0;
     time = 0.0;
@@ -111,6 +112,10 @@ bool Field::press(SDL_Keycode _key) {
         type = Click::None;
         break;
 
+    case SDLK_SPACE:
+        running ^= true;
+        break;
+
     case SDLK_R:
         reset();
         break;
@@ -171,21 +176,7 @@ void Field::interact(Cube& _cube1, Cube& _cube2) const {
     _cube2.vx += force*_cube2.inertion;
 }
 
-void Field::update(const Mouse _mouse) {
-    // Interaction
-    if (clicking) {
-        SDL_Point p = getRelative(_mouse);
-        if (isValid(p)) {
-            if (clicking & SDL_BUTTON_LMASK) {
-                field[p.x+p.y*width].setType(type);
-            }
-            if (clicking & SDL_BUTTON_RMASK) {
-                field[p.x+p.y*width].setType(Click::Normal);
-            }
-        }
-    }
-
-    // Physics
+void Field::calculatePhysics() {
     // Sources
     float sourcHeight = sourceAmp*SDL_sinf(time);
     time += sourceFreq;
@@ -212,6 +203,26 @@ void Field::update(const Mouse _mouse) {
         field[i].vx *= frictions[frictionVar];
         // Set new position
         field[i].x += field[i].vx;
+    }
+}
+
+void Field::update(const Mouse _mouse) {
+    // Interaction
+    if (clicking) {
+        SDL_Point p = getRelative(_mouse);
+        if (isValid(p)) {
+            if (clicking & SDL_BUTTON_LMASK) {
+                field[p.x+p.y*width].setType(type);
+            }
+            if (clicking & SDL_BUTTON_RMASK) {
+                field[p.x+p.y*width].setType(Click::Normal);
+            }
+        }
+    }
+
+    // Physics
+    if (running) {
+        calculatePhysics();
     }
 }
 
@@ -246,7 +257,7 @@ void Field::blit() const {
         }
     }
     window.setDrawColor(WHITE);
-    window.drawDebugText(10.0, 10.0, "Interactions: \'1-6,0\', Reset: \'r\'");
+    window.drawDebugText(10.0, 10.0, "Interactions: \'1-6,0\', Reset: \'r\', Start/stop: \'space\'");
     switch (type) {
     case Click::None:
         window.drawDebugText(10.0, 25.0, "None");
@@ -278,5 +289,9 @@ void Field::blit() const {
 
     default:
         break;
+    }
+
+    if (!running) {
+        window.drawDebugText(10.0, 40.0, "Stopped");
     }
 }

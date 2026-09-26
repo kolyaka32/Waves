@@ -21,6 +21,7 @@ private:
     const float maxForce = 1000.0;
 
     // Interaction
+    bool running;
     SDL_MouseButtonFlags clicking;
     Click type;  // Type of interaction
     float pushForce;
@@ -41,6 +42,7 @@ private:
     SDL_FPoint getAbsolute(int x, int y, float h) const;
     void scroll(float& val, float wheelY) const;
 
+    void calculatePhysics();
     void interact(Cube& cube1, Cube& cube2) const;
 
 public:

@@ -33,6 +33,8 @@ void Cube::setType(Click _type) {
     case Click::Wall:
         type = Wall;
         inertion = 0.0;
+        vx = 0.0;
+        x = 0.0;
         break;
 
     case Click::Source:

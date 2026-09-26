@@ -15,12 +15,13 @@ bool BaseCycle::inputMouseDown() {
     /*if (settings.click(mouse)) {
         return true;
     }*/
-    field.click();
+    field.click(mouse);
     return false;
 }
 
 void BaseCycle::update() {
-    field.update();
+    mouse.updatePos();
+    field.update(mouse);
 }
 
 void BaseCycle::inputMouseUp() {

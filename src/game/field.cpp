@@ -28,7 +28,7 @@ void Field::reset() {
     }
     type = Click::Push;
     pushForce = 20.0;
-    clicking = false;
+    clicking = 0;
 }
 
 bool Field::isValid(SDL_Point point) {
@@ -46,14 +46,17 @@ SDL_FPoint Field::getAbsolute(int x, int y, float h) const {
         CubeTexture::side*(float(x)/4 + float(y)/4 - height/8) - h};
 }
 
-bool Field::click() {
-    Mouse mouse;
-    mouse.updatePos();
-    SDL_Point p = getRelative(mouse);
+bool Field::click(const Mouse _mouse) {
+    SDL_Point p = getRelative(_mouse);
     if (isValid(p)) {
         switch (type) {
         case Click::Push:
-            field[p.x+p.y*width].x += pushForce;
+            if (_mouse.getState() & SDL_BUTTON_LMASK) {
+                field[p.x+p.y*width].x += pushForce;
+            }
+            if (_mouse.getState() & SDL_BUTTON_RMASK) {
+                field[p.x+p.y*width].x -= pushForce;
+            }
             break;
 
         case Click::Normal:
@@ -61,7 +64,7 @@ bool Field::click() {
         case Click::Heavy:
         case Click::Wall:
         case Click::Source:
-            clicking = true;
+            clicking = _mouse.getState();
             break;
 
         default:
@@ -73,7 +76,7 @@ bool Field::click() {
 }
 
 void Field::unclick() {
-    clicking = false;
+    clicking = 0;
 }
 
 bool Field::press(SDL_Keycode _key) {
@@ -83,22 +86,18 @@ bool Field::press(SDL_Keycode _key) {
         break;
 
     case SDLK_2:
-        type = Click::Normal;
-        break;
-
-    case SDLK_3:
         type = Click::Light;
         break;
 
-    case SDLK_4:
+    case SDLK_3:
         type = Click::Heavy;
         break;
 
-    case SDLK_5:
+    case SDLK_4:
         type = Click::Wall;
         break;
 
-    case SDLK_6:
+    case SDLK_5:
         type = Click::Source;
         break;
 
@@ -121,15 +120,15 @@ bool Field::wheelScroll(float wheel) {
         for (;wheel < 0; ++wheel) {
             pushForce /= 1.2;
         }
-        if (pushForce < 0.1) {
-            pushForce = 0.1;
+        if (pushForce < minForce) {
+            pushForce = minForce;
         }
     } else {
         for (;wheel > 0; --wheel) {
             pushForce *= 1.2;
         }
-        if (pushForce > 500) {
-            pushForce = 500;
+        if (pushForce > maxForce) {
+            pushForce = maxForce;
         }
     }
     return true;
@@ -141,14 +140,17 @@ void Field::interact(Cube& _cube1, Cube& _cube2) const {
     _cube2.vx += force*_cube2.inertion;
 }
 
-void Field::update() {
+void Field::update(const Mouse _mouse) {
     // Interaction
     if (clicking) {
-        Mouse mouse;
-        mouse.updatePos();
-        SDL_Point p = getRelative(mouse);
+        SDL_Point p = getRelative(_mouse);
         if (isValid(p)) {
-            field[p.x+p.y*width].setType(type);
+            if (clicking & SDL_BUTTON_LMASK) {
+                field[p.x+p.y*width].setType(type);
+            }
+            if (clicking & SDL_BUTTON_RMASK) {
+                field[p.x+p.y*width].setType(Click::Normal);
+            }
         }
     }
 
@@ -204,34 +206,30 @@ void Field::blit() const {
         }
     }
     window.setDrawColor(WHITE);
-    window.drawDebugText(10.0, 10.0, "Interactions: \'1-5\', Reset: \'r\'");
+    window.drawDebugText(10.0, 10.0, "Interactions: \'1-5,0\', Reset: \'r\'");
     switch (type) {
     case Click::None:
         window.drawDebugText(10.0, 25.0, "None");
         break;
 
     case Click::Push:
-        window.drawDebugText(10.0, 25.0, "Push, force: %.1f", pushForce);
-        break;
-
-    case Click::Normal:
-        window.drawDebugText(10.0, 25.0, "Place normal");
+        window.drawDebugText(10.0, 25.0, "Push/pull, force: %f", pushForce);
         break;
 
     case Click::Light:
-        window.drawDebugText(10.0, 25.0, "Place light");
+        window.drawDebugText(10.0, 25.0, "Place light/normal");
         break;
 
     case Click::Heavy:
-        window.drawDebugText(10.0, 25.0, "Place heavy");
+        window.drawDebugText(10.0, 25.0, "Place heavy/normal");
         break;
 
     case Click::Wall:
-        window.drawDebugText(10.0, 25.0, "Place wall");
+        window.drawDebugText(10.0, 25.0, "Place wall/normal");
         break;
 
     case Click::Source:
-        window.drawDebugText(10.0, 25.0, "Place source");
+        window.drawDebugText(10.0, 25.0, "Place source/normal");
         break;
 
     default:

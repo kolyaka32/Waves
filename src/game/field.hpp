@@ -15,10 +15,12 @@ private:
     Cube* field;
     // Physics constants
     const float springKoef = 1.0;
-    const float friction = 0.99;
+    const float friction = 0.95;
+    const float minForce = 0.1;
+    const float maxForce = 1000.0;
 
     // Interaction
-    bool clicking = false;
+    SDL_MouseButtonFlags clicking;
     Click type;  // Type of interaction
     float pushForce;
 
@@ -42,10 +44,10 @@ public:
     void reset();
 
     // Interaction
-    bool click();
+    bool click(const Mouse mouse);
     void unclick();
     bool press(SDL_Keycode key);
     bool wheelScroll(float wheel);
-    void update();
+    void update(const Mouse mouse);
     void blit() const;
 };

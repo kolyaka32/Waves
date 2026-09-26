@@ -20,10 +20,10 @@ enum Type {
 // Possible types of interaction
 enum class Click {
     None,
+    Normal,
     // Straight interact
     Push,
     // Placement
-    Normal,
     Light,
     Heavy,
     Wall,

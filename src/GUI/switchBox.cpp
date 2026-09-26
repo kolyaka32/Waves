@@ -8,19 +8,18 @@
 #if (USE_SDL_FONT) && (PRELOAD_FONTS)
 
 
-GUI::SwitchBox::SwitchBox(const Window& _window, float _X, float _Y, float _W,
-    std::initializer_list<LanguagedText> _texts, unsigned _startOption, float _size, Color _backColor, Color _frontColor)
+GUI::SwitchBox::SwitchBox(const Window& _window, const TextArgument _arg, float _W,
+    std::initializer_list<LanguagedText> _texts, unsigned _startOption) noexcept
 : Template(_window),
-height(_size*1.2f / _window.getHeight()),
-backColor(_backColor) {
+height(_arg.height*1.2f / _window.getHeight()),
+backColor(_arg.backColor) {
     // Setting background
-    background = {(_X-_W/2)*window.getWidth(), (_Y - height/2)*window.getHeight(),
-        _W*window.getWidth(), height*window.getHeight()};
+    background = _arg.getRect(window, _W, height);
 
     // Placing select options
     int i=0;
     for (const LanguagedText* text=_texts.begin(); text != _texts.end(); ++text) {
-        drawnTexts.emplace_back(_window, (_X-_W/2+0.022), _Y, std::move(*text), _size, _frontColor, GUI::Aligment::Left);
+        drawnTexts.emplace_back(_window, std::move(*text), std::move(_arg));
         // Placing text
         drawnTexts[i].move(0.0, height*i);
         i++;
@@ -29,27 +28,38 @@ backColor(_backColor) {
     selected = _startOption;
 
     // Creating arrow
-    arrowRect = {background.x+_size*0.15f, background.y+_size*0.2f, _size*0.84f, _size*0.84f};
+    arrowRect = {background.x+height*0.1f, background.y+height*0.15f, height*0.7f, height*0.7f};
     arrowTexture = window.createTexture(arrowRect.w, arrowRect.h);
     SDL_Vertex vertex[3] = {
         {  // Down point
-            {_X+arrowRect.w*0.5f, _Y+arrowRect.h-1.0f},
+            {_arg.X+arrowRect.w*0.5f, _arg.Y+arrowRect.h},
             {0.0, 0.0, 0.0, 1.0},  // Black
         },
         {  // Left point
-            {_X, _Y},
+            {_arg.X, _arg.Y},
             {0.0, 0.0, 0.0, 1.0},  // Black
         },
         {  // Right point
-            {_X+arrowRect.w-1.0f, _Y},
+            {_arg.X+arrowRect.w, _arg.Y},
             {0.0, 0.0, 0.0, 1.0},  // Black
         },
     };
-    window.setDrawColor(_frontColor);
+    window.setDrawColor(_arg.textColor);
     window.setRenderTarget(arrowTexture);
     window.drawGeometry(vertex, 3);
     window.resetRenderTarget();
 }
+
+GUI::SwitchBox::SwitchBox(SwitchBox&& _object) noexcept
+: Template(std::move(_object)),
+selected(_object.selected),
+opened(_object.opened),
+height(_object.height),
+backColor(_object.backColor),
+background(std::move(_object.background)),
+drawnTexts(std::move(_object.drawnTexts)),
+arrowTexture(_object.arrowTexture),
+arrowRect(_object.arrowRect) {}
 
 void GUI::SwitchBox::set(unsigned _value) {
     if (opened) {
@@ -71,7 +81,7 @@ unsigned GUI::SwitchBox::getValue() const {
     return selected;
 }
 
-bool GUI::SwitchBox::click(const Mouse _mouse) {
+GUI::Code GUI::SwitchBox::click(const Mouse _mouse) {
     if (opened) {
         // Closing
         opened = false;
@@ -81,12 +91,12 @@ bool GUI::SwitchBox::click(const Mouse _mouse) {
             selected = (_mouse.getY() - background.y) / (height * window.getHeight());
             drawnTexts[selected].move(0.0, -height*selected);
             background.h = height * window.getHeight();
-            return true;
+            return Finished;
         }
         // Resetting to previous
         drawnTexts[selected].move(0.0, -height*selected);
         background.h = height * window.getHeight();
-        return false;
+        return None;
     } else {
         if (_mouse.in(background)) {
             // Selecting variant
@@ -96,7 +106,17 @@ bool GUI::SwitchBox::click(const Mouse _mouse) {
             drawnTexts[selected].move(0.0, height*selected);
         }
     }
-    return false;
+    return None;
+}
+
+void GUI::SwitchBox::move(float _X, float _Y) {
+    background.x += _X*window.getWidth();
+    background.y += _Y*window.getHeight();
+    for (int i=0; i < drawnTexts.size(); ++i) {
+        drawnTexts[i].move(_X, _Y);
+    }
+    arrowRect.x += _X*window.getWidth();
+    arrowRect.y += _Y*window.getHeight();
 }
 
 void GUI::SwitchBox::blit() const {

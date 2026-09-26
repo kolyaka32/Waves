@@ -9,7 +9,7 @@
 // Main function
 int main(int argv, char **args) {
     // Creating main window
-    Window window{1000, 800, {"Something", "Штука", "", ""}};
+    Window window{1000, 800, {"Something", "Штука"}};
 
     // Running menu
     App::run(window);

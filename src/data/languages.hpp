@@ -20,9 +20,9 @@ class LanguagedText {
     static Language currentLanguage;
 
  public:
-    // englishVariant, russianVariant, germanVariant, bellarussianVariant
-    template <typename ...Vars>
-    LanguagedText(const Vars... variants);
+    /*LanguagedText(const std::string englishVariant, const std::string russianVariant,
+        const std::string germanVariant, const std::string bellarussianVariant);*/
+    LanguagedText(const std::string englishVariant, const std::string russianVariant);
     LanguagedText(const std::string singleVariant);
     LanguagedText(const LanguagedText& copyText) noexcept;
     LanguagedText(LanguagedText&& movedText) noexcept;
@@ -32,7 +32,3 @@ class LanguagedText {
     static bool setLanguage(Language newLanguage);
     static Language getLanguage();
 };
-
-template <typename ...Vars>
-LanguagedText::LanguagedText(const Vars... _variants)
-: textVariants{_variants...} {}

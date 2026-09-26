@@ -158,7 +158,7 @@ bool Field::wheelScroll(float _wheelY) {
             setMax(frictionVar, 7);
         }
         break;
-    
+
     default:
         break;
     }

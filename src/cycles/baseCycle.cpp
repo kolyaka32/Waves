@@ -15,7 +15,9 @@ bool BaseCycle::inputMouseDown() {
     /*if (settings.click(mouse)) {
         return true;
     }*/
-    field.click(mouse);
+    if (field.click(mouse)) {
+        return true;
+    }
     return false;
 }
 

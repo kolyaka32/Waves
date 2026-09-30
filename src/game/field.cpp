@@ -85,30 +85,37 @@ void Field::unclick() {
 bool Field::press(SDL_Keycode _key) {
     switch (_key) {
     case SDLK_1:
+    case SDLK_KP_1:
         type = Click::Push;
         break;
 
     case SDLK_2:
+    case SDLK_KP_2:
         type = Click::Light;
         break;
 
     case SDLK_3:
+    case SDLK_KP_3:
         type = Click::Heavy;
         break;
 
     case SDLK_4:
+    case SDLK_KP_4:
         type = Click::Wall;
         break;
 
     case SDLK_5:
+    case SDLK_KP_5:
         type = Click::Source;
         break;
 
     case SDLK_6:
+    case SDLK_KP_6:
         type = Click::Friction;
         break;
 
     case SDLK_0:
+    case SDLK_KP_0:
         type = Click::None;
         break;
 

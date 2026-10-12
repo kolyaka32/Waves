@@ -32,7 +32,7 @@ namespace GUI {
         Button2,   // Pressed 2 button
         Button3,   // Pressed 3 button
         // Etc..
-    } Action;
+    };
 
     // Type for returning code of action
     typedef int Code;

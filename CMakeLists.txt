@@ -9,7 +9,9 @@ project(Waves)
 
 # Hidding console on windows
 if (WIN32)
-    set(CMAKE_CXX_FLAGS "-mwindows -static")
+    set(CMAKE_CXX_FLAGS "-mwindows -static -Wall -s")
+else (WIN32)
+    set(CMAKE_CXX_FLAGS "-static -Wall -s")
 endif (WIN32)
 
 # Setting to link standart libraries statickly

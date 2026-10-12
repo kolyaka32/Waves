@@ -11,6 +11,7 @@
 class Field {
 private:
     // Field
+    const Window& window;
     const int width, height;
     Cube* field;
     // Physics constants
@@ -34,7 +35,6 @@ private:
     const CubeTexture lightTexture;
     const CubeTexture heavyTexture;
     const CubeTexture wallTexture;
-    const Window& window;
 
     //
     bool isValid(SDL_Point point);

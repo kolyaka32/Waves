@@ -38,7 +38,7 @@ class Window {
     #endif
 
     // Find first avaliable 
-    SDL_DisplayID getAvaliableID() const;
+    static SDL_DisplayID getAvaliableID();
     // Set new title
     void updateTitle(const char* name) const;
 

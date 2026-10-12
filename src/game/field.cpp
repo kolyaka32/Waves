@@ -10,10 +10,10 @@ Field::Field(const Window& _window, int _width, int _height)
 : window(_window),
 width(_width),
 height(_height),
-normalTexture(_window, {88, 133, 186, 255}, {65, 90, 140, 255}, {160, 217, 247, 255}),
-lightTexture(_window, {255, 255, 0, 255}, {255, 223, 0, 255}, {255, 237, 0, 255}),
-heavyTexture(_window, {0x62, 0xd2, 0xa2, 255}, {0x1f, 0xab, 0x89, 255}, {0x9d, 0xd3, 0xc3, 255}),
-wallTexture(_window, {90, 90, 90, 255}, {120, 120, 120, 255}, {190, 190, 190, 255}) {
+normalTexture(_window, {88,  133, 186, 255}, {65,  90, 140,  255}, {160, 217, 247, 255}),
+lightTexture(_window,  {255, 255, 0,   255}, {255, 223, 0,   255}, {255, 237, 0,   255}),
+heavyTexture(_window,  {98,  210, 162, 255}, {31,  171, 137, 255}, {157, 211, 195, 255}),
+wallTexture(_window,   {90,  90,  90,  255}, {120, 120, 120, 255}, {190, 190, 190, 255}) {
     field = new Cube[width*height];
     reset();
 }
@@ -255,7 +255,7 @@ void Field::blit() const {
                 break;
 
             case Source:
-                heavyTexture.blit(p);
+                wallTexture.blit(p);
                 break;
 
             default:
